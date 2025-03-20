@@ -1,6 +1,6 @@
 import Hapi from "@hapi/hapi"
-import routes  from "./routes.js"
-import books from "./books.js"
+import routes  from "./src/routes.js"
+
 
 const init = () => {
     const server = Hapi.server({
