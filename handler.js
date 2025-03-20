@@ -73,13 +73,17 @@ export const getAllBooks = (request, h) => {
         finished: b.finished,
         reading: b.reading
     }))
-
+    
     const nameUppercase = name ? name.toUpperCase() : null
+    const filterName = books.filter(b => b.name && nameUppercase ? b.name.toUpperCase().includes(nameUppercase) : true)
 
-    const filterName = books.filter(b => b.name.toUpperCase() === nameUppercase)
+    const booksFinished = bookStatus.filter(b => b.finished == true)
+    const booksUnfinished = bookStatus.filter(b => b.finished == false)
 
-    if(filterName.length > 0) {
+    const booksReading = bookStatus.filter(b => b.reading == true)
+    const booksUnreading = bookStatus.filter(b => b.reading == false)
 
+    if(name !== undefined) {
         const dataFilterName = filterName.map(b => ({
             id: b.id,
             name: b.name,
@@ -93,17 +97,7 @@ export const getAllBooks = (request, h) => {
         })
 
         return response.code(200)
-    }
-
-    const booksFinished = bookStatus.filter(b => b.finished == true)
-    const booksUnfinished = bookStatus.filter(b => b.finished == false)
-
-    const booksReading = bookStatus.filter(b => b.reading == true)
-    const booksUnreading = bookStatus.filter(b => b.reading == false)
-    
-    
-
-    if(finished === '1') {
+    } else if(finished === '1') {
 
         if(booksFinished.length > 0) {
             const dataFinished = booksFinished.map(b => ({
