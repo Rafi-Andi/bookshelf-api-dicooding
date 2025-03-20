@@ -57,19 +57,124 @@ export const addBooksHandler = (request, h) => {
 }
 
 export const getAllBooks = (request, h) => {
+    const {name, reading, finished} = request.query
+
     const book = books.map(b => ({
         id: b.id,
         name: b.name,
         publisher: b.publisher
     }))
+
+
+    const bookStatus = books.map(b => ({
+        id: b.id,
+        name: b.name,
+        publisher: b.publisher,
+        finished: b.finished,
+        reading: b.reading
+    }))
+
+    const nameUppercase = name ? name.toUpperCase() : null
+
+    const filterName = books.filter(b => b.name.toUpperCase() === nameUppercase)
+
+    if(filterName.length > 0) {
+
+        const dataFilterName = filterName.map(b => ({
+            id: b.id,
+            name: b.name,
+            publisher: b.publisher
+        }))
+        const response = h.response({
+            status: "success",
+            data: {
+                books: dataFilterName
+            }
+        })
+
+        return response.code(200)
+    }
+
+    const booksFinished = bookStatus.filter(b => b.finished == true)
+    const booksUnfinished = bookStatus.filter(b => b.finished == false)
+
+    const booksReading = bookStatus.filter(b => b.reading == true)
+    const booksUnreading = bookStatus.filter(b => b.reading == false)
     
-    const response = h.response({
-        status: "success",
-        data: {
-            books: book
+    
+
+    if(finished === '1') {
+
+        if(booksFinished.length > 0) {
+            const dataFinished = booksFinished.map(b => ({
+                id: b.id,
+                name: b.name,
+                publisher: b.publisher,
+            }))
+            const response = h.response({
+                status: "success",
+                data: {
+                    books: dataFinished
+                }
+            })
+
+            return response.code(200)
         }
-    })
-    return response.code(200)
+    } else if(finished === '0'){
+        if(booksFinished.length > 0){
+            const dataUnfinished = booksUnfinished.map(b => ({
+                id: b.id,
+                name: b.name,
+                publisher: b.publisher,
+            }))
+            const response = h.response({
+                status: "success",
+                data: {
+                    books: dataUnfinished
+                }
+            })
+
+            return response.code(200)
+        }
+    } else if(reading == '1'){
+        const dataReading = booksReading.map(b => ({
+            id: b.id,
+            name: b.name,
+            publisher: b.publisher
+        }))
+
+        const response = h.response({
+            status: "success",
+            data: {
+                books: dataReading
+            }
+        })
+
+        return response.code(200)
+    } else if(reading == '0') {
+        const dataUnreading = booksUnreading.map(b => ({
+            id: b.id,
+            name: b.name,
+            publisher: b.publisher
+        }))
+
+        const response = h.response({
+            status: "success",
+            data: {
+                books:dataUnreading
+            }
+        })
+
+        return response.code(200)
+    } else {
+        const response = h.response({
+            status: "success",
+            data: {
+                books: book
+            }
+        })
+        return response.code(200)
+    }
 }
 
 export const getBooksById = (request, h) => {
@@ -173,5 +278,21 @@ export const deleteBook = (request, h) => {
         })
 
         return response.code(404)
+    }
+}
+
+export const getBooksByName = (request, h) => {
+    const {name} = request.query
+
+    const nameUppercase = name.toUpperCase()
+
+    const booksName =  books.filter((b) => b.name === nameUppercase)
+    if(booksName){
+        const response = h.response({
+            message: "success",
+            data: {
+                booksName
+            }
+        })
     }
 }

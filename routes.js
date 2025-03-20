@@ -1,4 +1,4 @@
-import { addBooksHandler, getAllBooks, getBooksById, editBook, deleteBook } from "./handler.js"
+import { addBooksHandler, getAllBooks, getBooksById, editBook, deleteBook, getBooksByName } from "./handler.js"
 
 const routes = [
     {
@@ -25,7 +25,7 @@ const routes = [
         method: "DELETE",
         path: "/books/{bookId}",
         handler: deleteBook
-    }
+    },
 ]
 
 export default routes
